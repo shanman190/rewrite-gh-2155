@@ -1,0 +1,33 @@
+plugins {
+    id("java")
+//    id("org.openrewrite.rewrite") version "5.26.3"
+    id("io.moderne.rewrite") version "latest.release"
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor(0, "seconds")
+        cacheDynamicVersionsFor(0, "seconds")
+    }
+}
+
+dependencies {
+    rewrite(platform("org.openrewrite.recipe:rewrite-recipe-bom:latest.integration"))
+    rewrite("org.openrewrite.recipe:rewrite-testing-frameworks")
+
+    testImplementation(platform("org.junit:junit-bom:5.9.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("junit:junit:4.13.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
+    testImplementation("org.mockito:mockito-core:latest.release")
+}
+
+rewrite {
+    rewriteVersion("latest.integration")
+    activeRecipe("org.openrewrite.java.testing.junit5.JUnit5BestPractices")
+}
